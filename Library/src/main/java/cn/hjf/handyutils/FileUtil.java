@@ -18,7 +18,7 @@ import java.io.Serializable;
  * Created by huangjinfu on 2016/9/29.
  */
 
-public class FileUtil {
+public final class FileUtil {
 
     private static final String TAG = "HandyUtils-FileStorage";
 
