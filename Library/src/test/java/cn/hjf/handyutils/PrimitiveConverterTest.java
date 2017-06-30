@@ -10,12 +10,24 @@ public class PrimitiveConverterTest {
     @Test
     public void toBytes() throws Exception {
         short s = 0b00010001_11101110;
-        byte[] b = PrimitiveConverter.toBytes(s, PrimitiveConverter.Endian.BIG);
-        Assert.assertEquals(b[0] & 0x000000ff, (s & 0x0000ff00) >>> 8);
-        Assert.assertEquals(b[1] & 0x000000ff, s & 0x000000ff);
-        byte[] l = PrimitiveConverter.toBytes(s, PrimitiveConverter.Endian.LITTLE);
-        Assert.assertEquals(l[1] & 0x000000ff, (s & 0x0000ff00) >>> 8);
-        Assert.assertEquals(l[0] & 0x000000ff, s & 0x000000ff);
+        byte[] b = PrimitiveConverter.toBytes(PrimitiveConverter.Endian.BIG, s);
+        Assert.assertEquals(b[0] & 0x000000ff, 0b00010001);
+        Assert.assertEquals(b[1] & 0x000000ff, 0b11101110);
+        byte[] l = PrimitiveConverter.toBytes(PrimitiveConverter.Endian.LITTLE, s);
+        Assert.assertEquals(l[0] & 0x000000ff, 0b11101110);
+        Assert.assertEquals(l[1] & 0x000000ff, 0b00010001);
+    }
+
+    @Test
+    public void toInt() throws Exception {
+        byte[] bytes = new byte[]{0b00001111, 0b01010101, 0b00110011,};
+        junit.framework.Assert.assertEquals(
+                0b00000000_00001111_01010101_00110011,
+                PrimitiveConverter.toInt(PrimitiveConverter.Endian.BIG, bytes));
+        junit.framework.Assert.assertEquals(
+                0b00000000_00110011_01010101_00001111,
+                PrimitiveConverter.toInt(PrimitiveConverter.Endian.LITTLE, bytes));
+
     }
 
 }
