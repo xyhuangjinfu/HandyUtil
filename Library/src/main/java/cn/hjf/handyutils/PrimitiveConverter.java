@@ -11,7 +11,7 @@ public final class PrimitiveConverter {
         LITTLE
     }
 
-    public static byte[] toBytes(short s, Endian endian) {
+    public static byte[] toBytes(Endian endian, short s) {
         byte[] bytes = new byte[2];
         int bitsOfShort = Short.SIZE / Byte.SIZE;
         for (int i = 0; i < bitsOfShort; i++) {
@@ -20,6 +20,24 @@ public final class PrimitiveConverter {
             s = (short) (s >>> Byte.SIZE);
         }
         return bytes;
+    }
+
+    public static int toInt(Endian endian, byte... bytes) {
+        int value = 0;
+        for (int i = 0; i < bytes.length; i++) {
+            int index = endian == Endian.BIG ? i : bytes.length - 1 - i;
+            value = (value << Byte.SIZE) | bytes[index];
+        }
+        return value;
+    }
+
+    public static long toLong(Endian endian, byte... bytes) {
+        long value = 0;
+        for (int i = 0; i < bytes.length; i++) {
+            int index = endian == Endian.BIG ? i : bytes.length - 1 - i;
+            value = (value << Byte.SIZE) | bytes[index];
+        }
+        return value;
     }
 
 //    public static int toUnsignedInt(byte x) {
