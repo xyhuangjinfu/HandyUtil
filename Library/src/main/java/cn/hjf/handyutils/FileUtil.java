@@ -166,7 +166,7 @@ public final class FileUtil {
      *
      * @param fromPath
      * @param toPath
-     * @param cover
+     * @param cover    true-真实进行了复制。false-复制失败或者非覆盖模式下，文件已存在
      * @return
      */
     public static boolean copy(String fromPath, String toPath, boolean cover) {
@@ -182,8 +182,13 @@ public final class FileUtil {
         }
         //覆盖模式下，删除已有目标文件
         if (cover) {
-            if (!toFile.delete()) {
+            if (toFile.exists() && !toFile.delete()) {
                 Log.e(TAG, "cover mode, cannot delete dest file : " + toPath);
+                return false;
+            }
+        } else {
+            //不覆盖，文件已存在
+            if (toFile.exists()) {
                 return false;
             }
         }
