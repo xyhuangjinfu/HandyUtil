@@ -26,7 +26,7 @@ public final class PrimitiveConverter {
         int value = 0;
         for (int i = 0; i < bytes.length; i++) {
             int index = endian == Endian.BIG ? i : bytes.length - 1 - i;
-            value = (value << Byte.SIZE) | bytes[index];
+            value = (value << Byte.SIZE) | (bytes[index] & 0x000000FF);
         }
         return value;
     }
@@ -35,7 +35,7 @@ public final class PrimitiveConverter {
         long value = 0;
         for (int i = 0; i < bytes.length; i++) {
             int index = endian == Endian.BIG ? i : bytes.length - 1 - i;
-            value = (value << Byte.SIZE) | bytes[index];
+            value = (value << Byte.SIZE) | (bytes[index] & 0x000000FF);
         }
         return value;
     }
