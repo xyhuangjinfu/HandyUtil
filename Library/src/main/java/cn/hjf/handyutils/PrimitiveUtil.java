@@ -1,10 +1,11 @@
 package cn.hjf.handyutils;
 
 /**
+ * 原始数据类型转换工具
  * Created by huangjinfu on 2017/6/29.
  */
 
-public final class PrimitiveConverter {
+public final class PrimitiveUtil {
 
     public enum Endian {
         BIG,
