@@ -14,12 +14,12 @@ public class DateUtil {
      * 把时间格式化显示
      *
      * @param dateTime     日期
-     * @param InputPattern 输入的日期格式
+     * @param inputPattern 输入的日期格式
      * @param outPattern   输出的日期格式
      * @return
      */
-    public static String format(String dateTime, String InputPattern, String outPattern) {
-        SimpleDateFormat inputFormat = new SimpleDateFormat(InputPattern);
+    public static String format(String dateTime, String inputPattern, String outPattern) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
         try {
             Date date = inputFormat.parse(dateTime);
             SimpleDateFormat outputFormat = new SimpleDateFormat(outPattern);
@@ -40,6 +40,23 @@ public class DateUtil {
     public static String format(long timeInMills, String outPattern) {
         SimpleDateFormat format = new SimpleDateFormat(outPattern);
         return format.format(new Date(timeInMills));
+    }
+
+    /**
+     * 把字符串日期转换为毫秒
+     *
+     * @param date
+     * @param inputPattern
+     * @return
+     */
+    public static long toMillis(String date, String inputPattern) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+        try {
+            return inputFormat.parse(date).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
 }
