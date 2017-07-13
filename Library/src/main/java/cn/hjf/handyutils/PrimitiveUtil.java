@@ -41,6 +41,15 @@ public final class PrimitiveUtil {
         return value;
     }
 
+    public static double toDouble(Endian endian, byte... bytes) {
+        long value = 0;
+        for (int i = 0; i < bytes.length; i++) {
+            int index = endian == Endian.BIG ? i : bytes.length - 1 - i;
+            value = (value << Byte.SIZE) | (bytes[index] & 0x000000FF);
+        }
+        return Double.longBitsToDouble(value);
+    }
+
 //    public static int toUnsignedInt(byte x) {
 //        return ((int) x) & 0xff;
 //    }
