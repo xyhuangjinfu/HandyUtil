@@ -12,7 +12,7 @@ public final class PrimitiveUtil {
         LITTLE
     }
 
-    public static byte[] toBytes(Endian endian, short s) {
+    public static byte[] toByteArray(Endian endian, short s) {
         byte[] bytes = new byte[2];
         int bitsOfShort = Short.SIZE / Byte.SIZE;
         for (int i = 0; i < bitsOfShort; i++) {
@@ -21,6 +21,36 @@ public final class PrimitiveUtil {
             s = (short) (s >>> Byte.SIZE);
         }
         return bytes;
+    }
+
+    public static byte[] toByteArray(Endian endian, long l) {
+        int bitsOfLong = Long.SIZE / Byte.SIZE;
+        byte[] bytes = new byte[bitsOfLong];
+        for (int i = 0; i < bitsOfLong; i++) {
+            int index = endian == Endian.LITTLE ? i : bitsOfLong - 1 - i;
+            bytes[index] = (byte) (l & 0x000000FF);
+            l = l >>> Byte.SIZE;
+        }
+        return bytes;
+    }
+
+    public static byte[] toByteArray(Endian endian, long[] longArray) {
+        int bitsOfLong = Long.SIZE / Byte.SIZE;
+        byte[] bytes = new byte[longArray.length * bitsOfLong];
+        for (int i = 0; i < longArray.length; i++) {
+            int index = i * bitsOfLong;
+            System.arraycopy(toByteArray(endian, longArray[i]), 0, bytes, index, bitsOfLong);
+        }
+        return bytes;
+    }
+
+    public static int toShort(Endian endian, byte... bytes) {
+        int value = 0;
+        for (int i = 0; i < bytes.length; i++) {
+            int index = endian == Endian.BIG ? i : bytes.length - 1 - i;
+            value = (value << Byte.SIZE) | (bytes[index] & 0x000000FF);
+        }
+        return value;
     }
 
     public static int toInt(Endian endian, byte... bytes) {
@@ -49,37 +79,4 @@ public final class PrimitiveUtil {
         }
         return Double.longBitsToDouble(value);
     }
-
-//    public static int toUnsignedInt(byte x) {
-//        return ((int) x) & 0xff;
-//    }
-//
-//    public static long toUnsignedLong(int data) {
-//        return data & 0x00000000FFFFFFFFL;
-//    }
-//
-//    public static byte[] toBytes(double d) {
-//        long value = Double.doubleToRawLongBits(d);
-//        byte[] byteRet = new byte[8];
-//        for (int i = 0; i < 8; i++) {
-//            byteRet[i] = (byte) ((value >> 8 * i) & 0xff);
-//        }
-//        return byteRet;
-//    }
-//
-//    public static int toInt(byte... bytes) {
-//        int value = 0;
-//        for (int i = 0; i < bytes.length; i++) {
-//            value = (value << 8) | bytes[i];
-//        }
-//        return value;
-//    }
-//
-//    public static double bytes2Double(byte[] arr) {
-//        long value = 0;
-//        for (int i = 0; i < 8; i++) {
-//            value |= ((long) (arr[i] & 0xff)) << (8 * i);
-//        }
-//        return Double.longBitsToDouble(value);
-//    }
 }
