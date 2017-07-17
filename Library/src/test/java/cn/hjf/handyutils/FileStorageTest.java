@@ -88,4 +88,10 @@ public class FileStorageTest {
 
     }
 
+    @Test
+    public void saveAppend() throws Exception {
+//         FileUtil.save("E:\\tt\\2", new byte[] {10 , 11, 12});
+//         FileUtil.save("E:\\tt\\2", new byte[] {10 , 11, 12}, true);
+    }
+
 }

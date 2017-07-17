@@ -26,20 +26,32 @@ public final class FileUtil {
      * 保存数据
      *
      * @param absolutePath
-     * @param datas
+     * @param data
      * @return
      */
-    public static boolean save(String absolutePath, byte[] datas) {
+    public static boolean save(String absolutePath, byte[] data) {
+        return save(absolutePath, data, false);
+    }
+
+    /**
+     * 保存数据
+     *
+     * @param absolutePath
+     * @param data
+     * @param append
+     * @return
+     */
+    public static boolean save(String absolutePath, byte[] data, boolean append) {
         File destFile = createFile(absolutePath);
         if (destFile == null) {
             return false;
         }
-        if (!hasMoreSpace(destFile, datas.length)) {
+        if (!hasMoreSpace(destFile, data.length)) {
             return false;
         }
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(destFile);
-            fileOutputStream.write(datas);
+            FileOutputStream fileOutputStream = new FileOutputStream(destFile, append);
+            fileOutputStream.write(data);
             fileOutputStream.flush();
             fileOutputStream.close();
         } catch (Exception e) {
