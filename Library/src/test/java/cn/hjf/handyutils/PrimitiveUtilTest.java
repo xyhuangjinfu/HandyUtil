@@ -4,26 +4,10 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 /**
  * Created by huangjinfu on 2017/7/13.
  */
 public class PrimitiveUtilTest {
-    @Test
-    public void toDouble() throws Exception {
-        byte[] bytes = new byte[]{(byte) 0x40, (byte) 0xb9, (byte) 0x7c, (byte) 0x78, (byte) 0xf5, (byte) 0xc2, (byte) 0x8f, (byte) 0x5c};
-        Assert.assertEquals(PrimitiveUtil.toDouble(PrimitiveUtil.Endian.BIG, bytes), 6524.4725);
-    }
-
-    @Test
-    public void toByteArray() {
-        long l = 123456789123456789l;
-        System.out.println(Long.toBinaryString(l));
-        byte[] bytes = PrimitiveUtil.toByteArray(PrimitiveUtil.Endian.BIG, l);
-        System.out.println(Arrays.toString(bytes));
-        Assert.assertEquals(l, PrimitiveUtil.toLong(PrimitiveUtil.Endian.BIG, bytes));
-    }
 
     @Test
     public void shortTest() {
@@ -32,6 +16,24 @@ public class PrimitiveUtilTest {
         Assert.assertEquals(s, PrimitiveUtil.toShort(PrimitiveUtil.Endian.BIG, big));
         byte[] little = PrimitiveUtil.toByteArray(PrimitiveUtil.Endian.LITTLE, s);
         Assert.assertEquals(s, PrimitiveUtil.toShort(PrimitiveUtil.Endian.LITTLE, little));
+    }
+
+    @Test
+    public void intTest() {
+        int i = 2345678;
+        byte[] big = PrimitiveUtil.toByteArray(PrimitiveUtil.Endian.BIG, i);
+        Assert.assertEquals(i, PrimitiveUtil.toInt(PrimitiveUtil.Endian.BIG, big));
+        byte[] little = PrimitiveUtil.toByteArray(PrimitiveUtil.Endian.LITTLE, i);
+        Assert.assertEquals(i, PrimitiveUtil.toInt(PrimitiveUtil.Endian.LITTLE, little));
+    }
+
+    @Test
+    public void floatTest() {
+        float f = 234.567f;
+        byte[] big = PrimitiveUtil.toByteArray(PrimitiveUtil.Endian.BIG, f);
+        Assert.assertEquals(f, PrimitiveUtil.toFloat(PrimitiveUtil.Endian.BIG, big));
+        byte[] little = PrimitiveUtil.toByteArray(PrimitiveUtil.Endian.LITTLE, f);
+        Assert.assertEquals(f, PrimitiveUtil.toFloat(PrimitiveUtil.Endian.LITTLE, little));
     }
 
     @Test
@@ -61,4 +63,15 @@ public class PrimitiveUtilTest {
         System.arraycopy(bb, b3.length, b4, 0, b4.length);
         Assert.assertEquals(l2, PrimitiveUtil.toLong(PrimitiveUtil.Endian.LITTLE, b4));
     }
+
+    @Test
+    public void doubleTest() throws Exception {
+        double d = 12345.6789;
+        double delta = 0.0001;
+        byte[] big = PrimitiveUtil.toByteArray(PrimitiveUtil.Endian.BIG, d);
+        org.junit.Assert.assertEquals(d, PrimitiveUtil.toDouble(PrimitiveUtil.Endian.BIG, big), delta);
+        byte[] little = PrimitiveUtil.toByteArray(PrimitiveUtil.Endian.LITTLE, d);
+        org.junit.Assert.assertEquals(d, PrimitiveUtil.toDouble(PrimitiveUtil.Endian.LITTLE, little), delta);
+    }
+
 }
