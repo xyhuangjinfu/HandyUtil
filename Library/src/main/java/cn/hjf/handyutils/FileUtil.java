@@ -14,7 +14,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- * 文件系统存储功能
+ * A class provide the storage function on file system.
  * Created by huangjinfu on 2016/9/29.
  */
 
@@ -23,23 +23,23 @@ public final class FileUtil {
     private static final String TAG = "HandyUtils-FileStorage";
 
     /**
-     * 保存数据
+     * save data, override the old file if exist.
      *
-     * @param absolutePath
-     * @param data
-     * @return
+     * @param absolutePath file path.
+     * @param data         data to storage in above path.
+     * @return true-save success, false-save failed.
      */
     public static boolean save(String absolutePath, byte[] data) {
         return save(absolutePath, data, false);
     }
 
     /**
-     * 保存数据
+     * save data, client can choose whether or not override the old file if exist.
      *
-     * @param absolutePath
-     * @param data
-     * @param append
-     * @return
+     * @param absolutePath file path.
+     * @param data         data to storage in above path.
+     * @param append       true-append save, false-override save.
+     * @return true-save success, false-save failed.
      */
     public static boolean save(String absolutePath, byte[] data, boolean append) {
         File destFile = createFile(absolutePath);
@@ -62,11 +62,11 @@ public final class FileUtil {
     }
 
     /**
-     * 保存数据
+     * save serializable object.
      *
-     * @param absolutePath
-     * @param object
-     * @return
+     * @param absolutePath file path.
+     * @param object       object to storage in above path.
+     * @return true-save success, false-save failed.
      */
     public static boolean save(String absolutePath, Serializable object) {
         byte[] objectData = objectToByteArray(object);
@@ -77,10 +77,10 @@ public final class FileUtil {
     }
 
     /**
-     * 读取数据
+     * read byte[] from file.
      *
-     * @param absolutePath
-     * @return
+     * @param absolutePath file path from which we read the data.
+     * @return file data, or null if file not exist or other error occurs.
      */
     @Nullable
     public static byte[] readBytes(String absolutePath) {
@@ -98,10 +98,10 @@ public final class FileUtil {
     }
 
     /**
-     * 读取数据
+     * read object from file.
      *
-     * @param absolutePath
-     * @return
+     * @param absolutePath file path from which we read the data.
+     * @return file data, or null if file not exist or other error occurs.
      */
     public static Object readObject(String absolutePath) {
         Object object = null;
@@ -121,10 +121,10 @@ public final class FileUtil {
     }
 
     /**
-     * Object转换成byte数组
+     * convert serializable object to byte array.
      *
-     * @param object
-     * @return
+     * @param object serializable object
+     * @return byte array which present this object, or null if object is null or other error occurs.
      */
     @Nullable
     public static byte[] objectToByteArray(Serializable object) {
@@ -149,10 +149,10 @@ public final class FileUtil {
     }
 
     /**
-     * byte数组转换成Object
+     * convert byte array to object
      *
-     * @param byteArray
-     * @return
+     * @param byteArray byte array which present an object, may generate by {@link FileUtil#objectToByteArray(Serializable)}.
+     * @return the object, or null if byte array is null or other error occurs.
      */
     @Nullable
     public static Object byteArrayToObject(byte[] byteArray) {
@@ -174,51 +174,51 @@ public final class FileUtil {
     }
 
     /**
-     * 复制文件
+     * copy a file.
      *
-     * @param fromPath
-     * @param toPath
-     * @param cover    true-真实进行了复制。false-复制失败或者非覆盖模式下，文件已存在
-     * @return
+     * @param fromPath the src file path.
+     * @param toPath   the dest file path.
+     * @param cover    true-cover the dest file if exist.
+     * @return true-actual do copy, false-copy failed or skipped.
      */
     public static boolean copy(String fromPath, String toPath, boolean cover) {
-        //创建目标文件
+        //create dest file.
         File toFile = createFile(toPath);
         if (toFile == null) {
             return false;
         }
-        //创建源文件
+        //get src file.
         File fromFile = createFile(fromPath);
         if (fromFile == null) {
             return false;
         }
-        //覆盖模式下，删除已有目标文件
+        //if in cover mode, delete the dest file if exists.
         if (cover) {
             if (toFile.exists() && !toFile.delete()) {
                 Log.e(TAG, "cover mode, cannot delete dest file : " + toPath);
                 return false;
             }
         } else {
-            //不覆盖，文件已存在
+            //not cover.
             if (toFile.exists()) {
                 return false;
             }
         }
-        //从源文件读取数据
+        //read data from src file
         byte[] data = readBytes(fromPath);
         if (data == null) {
             Log.e(TAG, "data read from : " + fromPath + ", is null");
             return false;
         }
-        //写入目标文件
+        //do save
         return save(toPath, data);
     }
 
     /**
-     * 删除该路径的文件
+     * delete a file.
      *
-     * @param path
-     * @return
+     * @param path file to be deleted.
+     * @return true-delete success, false-delete failed or file not exist.
      */
     public static boolean delete(String path) {
         File file = new File(path);
@@ -229,10 +229,10 @@ public final class FileUtil {
     }
 
     /**
-     * 该路径对应的文件是否存在
+     * detect a specific file whether exist.
      *
-     * @param path
-     * @return
+     * @param path detect path.
+     * @return true-exists, false-not exists.
      */
     public static boolean exists(String path) {
         File file = new File(path);
@@ -240,7 +240,12 @@ public final class FileUtil {
     }
 
     /**
-     * 创建文件和上级目录
+     * ********************************************************************************************************
+     * ********************************************************************************************************
+     */
+
+    /**
+     * create file and it's parents.
      *
      * @param absolutePath
      * @return
@@ -258,11 +263,11 @@ public final class FileUtil {
     }
 
     /**
-     * 计算是否有足够的空间
+     * calculate remain space whether enough to save the specific file.
      *
-     * @param file
-     * @param needSpace
-     * @return
+     * @param file      file to be saved.
+     * @param needSpace data length.
+     * @return true-have enough space, false-have't enough space.
      */
     private static boolean hasMoreSpace(File file, long needSpace) {
         File existParent = getExistParent(file);
@@ -274,7 +279,7 @@ public final class FileUtil {
     }
 
     /**
-     * 向上寻找已经存在的 parent file
+     * find already exist parent along the up direction of the file tree.
      *
      * @param file
      * @return

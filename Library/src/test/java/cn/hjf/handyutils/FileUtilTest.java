@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Created by huangjinfu on 2017/6/28.
  */
-public class FileStorageTest {
+public class FileUtilTest {
 
     static class Person implements Serializable{
         String name;
