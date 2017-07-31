@@ -1,5 +1,6 @@
 package cn.hjf.handyutils;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,11 +36,16 @@ public class FileUtilTest {
         }
     }
 
-    private static final String testRootPath = new File("").getAbsolutePath() + "/test/";
+    private static final String testRootPath = new File("").getAbsolutePath() + File.separator + "FileUtilTest" + File.separator;
 
     @Before
     public void setUp() {
 
+    }
+
+    @After
+    public void tearDown() {
+        FileUtil.delete(testRootPath);
     }
 
     @Test
@@ -53,66 +59,6 @@ public class FileUtilTest {
         } else {
             Assert.assertEquals(FileUtil.exists(file), false);
         }
-    }
-
-    @Test
-    public void save() throws Exception {
-        byte[] data = new byte[]{1, 2, 3, 0, 3, 4, 6, 7, 8, 34, 65, 21};
-        String path = "D:\\testdata\\d1";
-        boolean save = FileUtil.save(path, data);
-        Assert.assertEquals(save, true);
-    }
-
-    @Test
-    public void save1() throws Exception {
-        Person person = new Person("tom", 24);
-        String path = "D:\\testdata\\d2";
-        boolean save = FileUtil.save(path, person);
-        Assert.assertEquals(save, true);
-    }
-
-    @Test
-    public void readBytes() throws Exception {
-
-    }
-
-    @Test
-    public void readObject() throws Exception {
-        Person person = new Person("tom", 24);
-        String path = "D:\\testdata\\d2";
-        Object o = FileUtil.readObject(path);
-        Assert.assertEquals(person.equals(o), true);
-    }
-
-    @Test
-    public void objectToByteArray() throws Exception {
-
-    }
-
-    @Test
-    public void byteArrayToObject() throws Exception {
-
-    }
-
-    @Test
-    public void copy() throws Exception {
-
-    }
-
-    @Test
-    public void delete() throws Exception {
-
-    }
-
-    @Test
-    public void exists() throws Exception {
-
-    }
-
-    @Test
-    public void saveAppend() throws Exception {
-//         FileUtil.save("E:\\tt\\2", new byte[] {10 , 11, 12});
-//         FileUtil.save("E:\\tt\\2", new byte[] {10 , 11, 12}, true);
     }
 
 }

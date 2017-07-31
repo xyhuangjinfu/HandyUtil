@@ -215,13 +215,19 @@ public final class FileUtil {
     }
 
     /**
-     * delete a file.
+     * delete a file or a directory.
      *
-     * @param path file to be deleted.
+     * @param path file or directory to be deleted.
      * @return true-delete success or file not exist, false-delete failed.
      */
     public static boolean delete(String path) {
-        File file = new File(path);
+        File file = createFile(path);
+        if (file == null) {
+            return true;
+        }
+        if (file.isDirectory()) {
+            return deleteDir(file);
+        }
         if (file.exists()) {
             return file.delete();
         }
@@ -290,5 +296,31 @@ public final class FileUtil {
             parent = parent.getParentFile();
         }
         return parent;
+    }
+
+    /**
+     * delete a directory.
+     *
+     * @param dir
+     * @return true-delete success, false-delete fail.
+     */
+    private static boolean deleteDir(File dir) {
+        if (dir == null) {
+            return false;
+        }
+        File[] children = dir.listFiles();
+        if (children == null) {
+            return false;
+        }
+        boolean deleted = true;
+        for (int i = 0; i < children.length; i++) {
+            File child = children[i];
+            if (child.isDirectory()) {
+                deleted &= deleteDir(child);
+            } else {
+                deleted &= child.delete();
+            }
+        }
+        return deleted & dir.delete();
     }
 }
