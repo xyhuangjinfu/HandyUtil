@@ -54,17 +54,25 @@ public final class FileUtil {
         if (!hasMoreSpace(destFile, data.length)) {
             return false;
         }
+
+        BufferedOutputStream bos = null;
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(destFile, append);
-            BufferedOutputStream bos = new BufferedOutputStream(fileOutputStream);
+            FileOutputStream fos = new FileOutputStream(destFile, append);
+            bos = new BufferedOutputStream(fos);
             bos.write(data);
             bos.flush();
-            bos.close();
+            return true;
         } catch (Exception e) {
             Log.e(TAG, e.toString());
-            return false;
+        } finally {
+            if (bos != null) {
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                }
+            }
         }
-        return true;
+        return false;
     }
 
     /**
