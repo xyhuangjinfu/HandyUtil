@@ -1,5 +1,6 @@
 package cn.hjf.handyutils;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -9,8 +10,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -107,21 +110,31 @@ public final class FileUtil {
      * @param absolutePath file path from which we read the data.
      * @return file data, or null if file not exist or other error occurs.
      */
+    @Nullable
     public static Object readObject(String absolutePath) {
-        Object object = null;
+        InputStream is;
         try {
-            File destFile = new File(absolutePath);
-            if (destFile.exists()) {
-                FileInputStream fileInputStream = new FileInputStream(destFile);
-                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-                object = objectInputStream.readObject();
-                objectInputStream.close();
-                fileInputStream.close();
-            }
+            is = openInputStream(absolutePath);
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, e.toString());
+            return null;
+        }
+
+        ObjectInputStream ois = null;
+        try {
+            ois = new ObjectInputStream(is);
+            return ois.readObject();
         } catch (Exception e) {
             Log.e(TAG, e.toString());
+        } finally {
+            if (ois != null) {
+                try {
+                    ois.close();
+                } catch (IOException e) {
+                }
+            }
         }
-        return object;
+        return null;
     }
 
     /**
@@ -320,5 +333,21 @@ public final class FileUtil {
             }
         }
         return deleted & dir.delete();
+    }
+
+    /**
+     * open a file.
+     *
+     * @param path file path.
+     * @return InputStream object for this file.
+     * @throws FileNotFoundException
+     */
+    @NonNull
+    private static InputStream openInputStream(String path) throws FileNotFoundException {
+        File file = createFile(path);
+        if (file == null) {
+            throw new FileNotFoundException(path);
+        }
+        return new FileInputStream(file);
     }
 }
