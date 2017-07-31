@@ -176,42 +176,36 @@ public final class FileUtil {
     /**
      * copy a file.
      *
-     * @param fromPath the src file path.
-     * @param toPath   the dest file path.
+     * @param srcPath  the src file path.
+     * @param destPath the dest file path.
      * @param cover    true-cover the dest file if exist.
-     * @return true-actual do copy, false-copy failed or skipped.
+     * @return true-actual do copy in cover mode, or dest file exist when not in cover mode, false-copy failed.
      */
-    public static boolean copy(String fromPath, String toPath, boolean cover) {
+    public static boolean copy(String srcPath, String destPath, boolean cover) {
         //create dest file.
-        File toFile = createFile(toPath);
-        if (toFile == null) {
+        File srcFile = createFile(srcPath);
+        if (srcFile == null) {
             return false;
         }
         //get src file.
-        File fromFile = createFile(fromPath);
-        if (fromFile == null) {
+        File destFile = createFile(destPath);
+        if (destFile == null) {
             return false;
         }
-        //if in cover mode, delete the dest file if exists.
-        if (cover) {
-            if (toFile.exists() && !toFile.delete()) {
-                Log.e(TAG, "cover mode, cannot delete dest file : " + toPath);
-                return false;
-            }
-        } else {
-            //not cover.
-            if (toFile.exists()) {
-                return false;
+        //not cover mode
+        if (!cover) {
+            if (destFile.exists()) {
+                return true;
             }
         }
         //read data from src file
-        byte[] data = readBytes(fromPath);
+        byte[] data = readBytes(srcPath);
         if (data == null) {
-            Log.e(TAG, "data read from : " + fromPath + ", is null");
+            Log.e(TAG, "data read from : " + srcPath + ", is null");
             return false;
         }
         //do save
-        return save(toPath, data);
+        return save(destPath, data);
     }
 
     /**
