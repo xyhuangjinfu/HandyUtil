@@ -90,18 +90,38 @@ public final class FileUtil {
      */
     @Nullable
     public static byte[] readBytes(String absolutePath) {
-        byte[] data = null;
+        InputStream is;
         try {
-            File destFile = new File(absolutePath);
-            FileInputStream fileInputStream = new FileInputStream(destFile);
-            BufferedInputStream bis = new BufferedInputStream(fileInputStream);
-            data = new byte[fileInputStream.available()];
-            bis.read(data);
-            bis.close();
+            is = openInputStream(absolutePath);
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, e.toString());
+            return null;
+        }
+
+        BufferedInputStream bis = null;
+        try {
+            byte[] data = new byte[0];
+            bis = new BufferedInputStream(is);
+            while (bis.available() != 0) {
+                byte[] temp = new byte[bis.available()];
+                bis.read(temp);
+                byte[] newData = new byte[data.length + temp.length];
+                System.arraycopy(data, 0, newData, 0, data.length);
+                System.arraycopy(temp, 0, newData, data.length, temp.length);
+                data = newData;
+            }
+            return data;
         } catch (Exception e) {
             Log.e(TAG, e.toString());
+        } finally {
+            if (bis != null) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                }
+            }
         }
-        return data;
+        return null;
     }
 
     /**
