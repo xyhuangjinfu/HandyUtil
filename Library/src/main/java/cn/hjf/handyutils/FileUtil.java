@@ -3,6 +3,8 @@ package cn.hjf.handyutils;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -51,9 +53,10 @@ public final class FileUtil {
         }
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(destFile, append);
-            fileOutputStream.write(data);
-            fileOutputStream.flush();
-            fileOutputStream.close();
+            BufferedOutputStream bos = new BufferedOutputStream(fileOutputStream);
+            bos.write(data);
+            bos.flush();
+            bos.close();
         } catch (Exception e) {
             Log.e(TAG, e.toString());
             return false;
@@ -88,9 +91,10 @@ public final class FileUtil {
         try {
             File destFile = new File(absolutePath);
             FileInputStream fileInputStream = new FileInputStream(destFile);
+            BufferedInputStream bis = new BufferedInputStream(fileInputStream);
             data = new byte[fileInputStream.available()];
-            fileInputStream.read(data);
-            fileInputStream.close();
+            bis.read(data);
+            bis.close();
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
