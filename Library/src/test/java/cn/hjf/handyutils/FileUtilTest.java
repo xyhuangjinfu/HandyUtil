@@ -1,9 +1,10 @@
 package cn.hjf.handyutils;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -11,7 +12,7 @@ import java.io.Serializable;
  */
 public class FileUtilTest {
 
-    static class Person implements Serializable{
+    static class Person implements Serializable {
         String name;
         int age;
 
@@ -31,6 +32,26 @@ public class FileUtilTest {
             Person p = (Person) obj;
             return p.age == this.age
                     && p.name == null ? this.name == null : p.name.equals(this.name);
+        }
+    }
+
+    private static final String testRootPath = new File("").getAbsolutePath() + "/test/";
+
+    @Before
+    public void setUp() {
+
+    }
+
+    @Test
+    public void testExistsAndDelete() {
+        String file = testRootPath + "file";
+        Assert.assertEquals(FileUtil.delete(file), true);
+        Assert.assertEquals(FileUtil.exists(file), false);
+        if (FileUtil.save(file, new byte[0])) {
+            Assert.assertEquals(FileUtil.exists(file), true);
+            Assert.assertEquals(FileUtil.delete(file), true);
+        } else {
+            Assert.assertEquals(FileUtil.exists(file), false);
         }
     }
 

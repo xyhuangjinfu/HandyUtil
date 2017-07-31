@@ -218,14 +218,14 @@ public final class FileUtil {
      * delete a file.
      *
      * @param path file to be deleted.
-     * @return true-delete success, false-delete failed or file not exist.
+     * @return true-delete success or file not exist, false-delete failed.
      */
     public static boolean delete(String path) {
         File file = new File(path);
         if (file.exists()) {
             return file.delete();
         }
-        return false;
+        return true;
     }
 
     /**
