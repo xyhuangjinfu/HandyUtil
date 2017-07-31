@@ -169,20 +169,24 @@ public final class FileUtil {
             return null;
         }
 
-        byte[] bytes = null;
+        ObjectOutputStream oos = null;
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos = new ObjectOutputStream(bos);
             oos.writeObject(object);
             oos.flush();
-            bytes = bos.toByteArray();
-            oos.close();
-            bos.close();
+            return bos.toByteArray();
         } catch (IOException e) {
-            System.out.println(e);
             Log.e(TAG, e.toString());
+        } finally {
+            if (oos != null) {
+                try {
+                    oos.close();
+                } catch (IOException e) {
+                }
+            }
         }
-        return bytes;
+        return null;
     }
 
     /**
@@ -197,17 +201,22 @@ public final class FileUtil {
             return null;
         }
 
-        Object object = null;
+        ObjectInputStream ois = null;
         try {
             ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
-            ObjectInputStream ois = new ObjectInputStream(bis);
-            object = ois.readObject();
-            ois.close();
-            bis.close();
+            ois = new ObjectInputStream(bis);
+            return ois.readObject();
         } catch (Exception e) {
             Log.e(TAG, e.toString());
+        } finally {
+            if (ois != null) {
+                try {
+                    ois.close();
+                } catch (IOException e) {
+                }
+            }
         }
-        return object;
+        return null;
     }
 
     /**
